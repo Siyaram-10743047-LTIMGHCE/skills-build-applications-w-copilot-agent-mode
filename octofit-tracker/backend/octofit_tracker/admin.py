@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import User, Team, Activity, Workout, Leaderboard
+from django.contrib.auth.models import User as DjangoUser, Group
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -8,7 +9,10 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'created_at')
-    filter_horizontal = ('members',)
+
+    # Unregister default User and Group to avoid admin clashes
+admin.site.unregister(DjangoUser)
+admin.site.unregister(Group)
 
 @admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
