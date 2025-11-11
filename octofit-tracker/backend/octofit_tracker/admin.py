@@ -10,9 +10,14 @@ class UserAdmin(admin.ModelAdmin):
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'created_at')
 
-    # Unregister default User and Group to avoid admin clashes
-admin.site.unregister(DjangoUser)
-admin.site.unregister(Group)
+
+# Unregister default User and Group to avoid admin clashes, only if registered
+from django.contrib.admin.sites import NotRegistered
+for model in [DjangoUser, Group]:
+    try:
+        admin.site.unregister(model)
+    except NotRegistered:
+        pass
 
 @admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
